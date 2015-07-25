@@ -1,0 +1,36 @@
+.contact {
+  margin: 15px 0;
+  padding: 10px;
+  border: 1px solid #DDD;
+  background: #F0F0F0;
+}
+
+.contact .avatar {
+  max-width: 80px;
+  border: 1px solid #CCC;
+  background: white;
+}
+
+.contact a.edit-link, .contact a.delete-link {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.contact .name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.contact .email-wrap {
+  display: inline-block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact p {
+  margin-left: 90px;
+}
+
+.contact:first-of-type, .contact:last-child { margin-bottom: 0; }

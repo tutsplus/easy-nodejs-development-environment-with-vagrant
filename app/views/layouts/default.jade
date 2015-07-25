@@ -1,0 +1,30 @@
+doctype html
+html
+  head
+    title Contacts
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css")
+    link(rel="stylesheet" href="/css/contacts.css")
+  body
+    .container
+      h1 Contacts
+      hr
+
+      .notifications
+        if success && success.length
+          for message in success
+            .fade.in.alert.alert-success
+              button.close(type="button" data-dismiss="alert") ×
+              message
+
+      block content
+
+      hr
+      p.text-center
+        | Robots lovingly delivered by 
+        a(href="http://robohash.org" target="_blank") Robohash.org
+        | .
+    
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")  
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js")  
+    script(src="/socket.io/socket.io.js")
+    script(src="/js/contacts.js")

@@ -1,0 +1,48 @@
+extends ../layouts/default.jade
+
+block content
+  .pull-right
+    a.btn.btn-success(href="/contacts/new") New Contact
+  div
+    button#generate-samples.btn.btn-info Generate Sample Contacts
+  
+  .contacts.row
+    .sample-contact.hidden
+      .contact
+        .pull-left
+          img.avatar
+          a.btn.btn-xs.btn-warning.btn-block.edit-link Edit
+          form(method="POST")
+            input(type="hidden" name="_method" value="DELETE")
+            button.btn.btn-xs.btn-danger.btn-block.delete-link(type="submit") Delete
+        p.name #[span.firstName] #[span.lastName]
+        p
+          a.twitter-link @#[span.twitter]
+        p.
+          #[span.streetAddress]<br>
+          #[span.countryCode] #[span.zipCode] #[span.city]
+        p
+          | Phone: #[span.phone]<br>
+          span.email-wrap Email: #[a.email]
+    if contacts.length
+      for contact in contacts
+        .col-sm-4
+          .contact
+            .pull-left
+              img.avatar(src=contact.avatarUrl)
+              a.btn.btn-xs.btn-warning.btn-block.edit-link(href="/contacts/" + contact.id + "/edit") Edit
+              form(method="POST" action="/contacts/" + contact.id)
+                input(type="hidden" name="_method" value="DELETE")
+                button.btn.btn-xs.btn-danger.btn-block.delete-link(type="submit") Delete
+            p.name #{contact.firstName} #{contact.lastName}
+            p
+              a(href="https://twitter.com/" + contact.twitter) @#{contact.twitter}
+            p.
+              #{contact.streetAddress}<br>
+              #{contact.countryCode} #{contact.zipCode} #{contact.city}
+            p
+              | Phone: #{contact.phoneNumber}<br>
+              span.email-wrap Email: #[a.email(href="mailto:" + contact.email)= contact.email]
+    else
+      .col-sm-12.text-center.
+        There are no contacts yet. #[a(href="/contacts/new") Create one].

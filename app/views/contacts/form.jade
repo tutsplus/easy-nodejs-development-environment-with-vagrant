@@ -1,0 +1,60 @@
+extends ../layouts/default.jade
+
+block content
+  if contact.isNew
+    - var action = "/contacts"
+  else
+    - var action = "/contacts/" + contact.id
+  
+  form(method="post" action=action)
+    input(type="hidden" name="_csrf" value=csrf_token)
+    
+    if !contact.isNew
+      input(type="hidden" name="_method" value="PUT")
+    
+    .row
+      .form-group.col-sm-6
+        label.control-label(for="firstName") First Name
+        input.form-control(type="text" name="firstName" value=contact.firstName)
+      .form-group.col-sm-6
+        label.control-label(for="lastName") Last Name
+        input.form-control(type="text" name="lastName" value=contact.lastName)
+          
+    .form-group
+      label.control-label(for="streetAddress") Street Address
+      input.form-control(type="text" name="streetAddress" value=contact.streetAddress)
+    
+    .row
+      .form-group.col-sm-2
+        label.control-label(for="countryCode") Country Code
+        input.form-control(type="text" name="countryCode" value=contact.countryCode)
+      .form-group.col-sm-2
+        label.control-label(for="zipCode") Zip Code
+        input.form-control(type="text" name="zipCode" value=contact.zipCode)
+      .form-group.col-sm-8
+        label.control-label(for="city") City
+        input.form-control(type="text" name="city" value=contact.city)
+    
+    .row
+      .form-group.col-sm-4
+        label.control-label(for="phoneNumber") Phone Number
+        input.form-control(type="text" name="phoneNumber" value=contact.phoneNumber)
+      .form-group.col-sm-4
+        label.control-label(for="email") Email
+        input.form-control(type="text" name="email" value=contact.email)
+      .form-group.col-sm-4
+        label.control-label(for="twitter") Twitter
+        input.form-control(type="text" name="twitter" value=contact.twitter)
+
+    .form-group
+      label.control-label(for="avatarUrl") Avatar URL
+      input.form-control(type="text" name="avatarUrl" value=contact.avatarUrl)
+    
+    .actions
+      button.btn.btn-success(type="submit")
+        if contact.isNew
+          | Create Contact
+        else
+          | Save Contact
+      | &nbsp;
+      a.btn.btn-default(href="/contacts") Back to Contacts
