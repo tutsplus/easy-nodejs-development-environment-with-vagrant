@@ -64,8 +64,45 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   sudo apt-get update
-  #   sudo apt-get install -y apache2
-  # SHELL
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    sudo apt-get update
+    sudo apt-get install -y build-essential curl
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | bash
+    source ~/.nvm/nvm.sh
+    nvm install node
+    nvm alias default node
+
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+    echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+    sudo apt-get update
+    sudo apt-get install -y mongodb-org
+
+    curl http://download.redis.io/redis-stable.tar.gz -o redis-stable.tar.gz
+    tar xzf redis-stable.tar.gz
+    cd redis-stable
+    cd deps
+    make hiredis lua jemalloc linenoise
+    cd ..
+    make
+    sudo make install
+    sudo mkdir -p /var/redis/6379 /etc/redis
+    sudo cp utils/redis_init_script /etc/init.d/redis_6379
+    sudo update-rc.d redis_6379 defaults
+    sudo cp redis.conf /etc/redis/6379.conf
+    sudo sed -i 's/daemonize no/daemonize yes/g' /etc/redis/6379.conf
+    sudo sed -i 's/redis.pid/redis_6379.pid/g' /etc/redis/6379.conf
+    sudo sed -i 's/# bind 127.0.0.1/bind 127.0.0.1/g' /etc/redis/6379.conf
+    sudo sed -i 's/logfile ""/logfile \/var\/log\/redis_6379.log/g' /etc/redis/6379.conf
+    sudo sed -i 's/dir .\//dir \/var\/redis\/6379/g' /etc/redis/6379.conf
+    sudo service redis_6379 start
+
+    cd /vagrant
+    npm install
+    npm install -g nodemon
+
+    sudo apt-get install -y ruby
+    sudo gem install foreman
+    sudo foreman export upstart /etc/init -a nodejs -u vagrant -p 4000
+    sudo service nodejs start
+  SHELL
 end
